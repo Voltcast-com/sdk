@@ -1,0 +1,24 @@
+[project]
+name = "voltcast"
+version = "0.1.0"
+description = "Official Python SDK for the Voltcast API — 15-minute European power prices and probabilistic forecasts."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["httpx>=0.24"]
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.0"]
+dev = ["pytest>=8.0", "pytest-httpx>=0.30"]
+
+[project.urls]
+Homepage = "https://voltcast.com"
+Repository = "https://github.com/Voltcast-com/sdk"
+Documentation = "https://voltcast.com/docs"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["voltcast*"]

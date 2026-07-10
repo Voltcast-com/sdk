@@ -1,0 +1,31 @@
+{
+    "name": "@voltcast/sdk",
+    "version": "0.1.0",
+    "description": "Official TypeScript SDK for the Voltcast API — 15-minute European power prices and probabilistic forecasts.",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": ["dist"],
+    "scripts": {
+        "build": "tsc",
+        "test": "node --test --experimental-strip-types test/client.test.ts"
+    },
+    "keywords": ["electricity", "prices", "epex", "day-ahead", "forecast", "energy", "api"],
+    "license": "MIT",
+    "homepage": "https://voltcast.com/docs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Voltcast-com/sdk.git",
+        "directory": "typescript"
+    },
+    "devDependencies": {
+        "typescript": "^5.6.0",
+        "@types/node": "^22.0.0"
+    }
+}

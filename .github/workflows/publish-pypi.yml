@@ -1,0 +1,39 @@
+# Publishes python/ to PyPI via Trusted Publishing (OIDC).
+# PyPI trusted-publisher values for this repo:
+#   PyPI Project Name: voltcast
+#   Owner:             Voltcast-com
+#   Repository name:   sdk
+#   Workflow name:     publish-pypi.yml
+#   Environment name:  pypi
+name: Publish Python SDK to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'sdk-py-v')
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        working-directory: python
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
