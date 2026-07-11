@@ -69,6 +69,30 @@ export interface ExportFile {
     expires_at: string;
 }
 
+export interface RenewablesRow {
+    ts: string;
+    /** TSO day-ahead forecast (ENTSO-E A69). */
+    wind_forecast_mw: number | null;
+    solar_forecast_mw: number | null;
+    /** Voltcast's own model (volt-res-1). */
+    wind_voltcast_mw: number | null;
+    solar_voltcast_mw: number | null;
+    wind_voltcast_band: { q10: number; q90: number } | null;
+    solar_voltcast_band: { q10: number; q90: number } | null;
+    /** Realized generation (A75). */
+    wind_actual_mw: number | null;
+    solar_actual_mw: number | null;
+}
+
+export interface WeatherRow {
+    ts: string;
+    temp_c: number | null;
+    wind_ms: number | null;
+    radiation_wm2: number | null;
+    cloud_pct: number | null;
+    wind100m_ens: { mean: number; std: number; min: number; max: number; members: number } | null;
+}
+
 export interface ApiResponse<T> {
     data: T;
     meta: Record<string, unknown>;
@@ -135,6 +159,26 @@ export class Voltcast {
         start?: string;
     }): Promise<ApiResponse<Schedule>> {
         return this.request("POST", "/v1/optimize/schedule", { body });
+    }
+
+    /**
+     * Day-ahead wind/solar forecasts: the TSO's (A69) and Voltcast's own
+     * volt-res-1 model with q10–q90 bands, beside realized generation.
+     * meta.verification scores both head-to-head (Pro/Scale/Balancing/Quant).
+     */
+    renewables(
+        zone: string,
+        options: { from?: string; to?: string } = {},
+    ): Promise<ApiResponse<RenewablesRow[]>> {
+        return this.request("GET", `/v1/renewables/${zone}`, { query: options });
+    }
+
+    /** Zone-centroid weather: point forecast + wind-ensemble band (Pro/Scale/Balancing/Quant). */
+    weather(
+        zone: string,
+        options: { from?: string; to?: string } = {},
+    ): Promise<ApiResponse<WeatherRow[]>> {
+        return this.request("GET", `/v1/weather/${zone}`, { query: options });
     }
 
     /** Signed bulk-export URLs for zone-year files (Pro+). */

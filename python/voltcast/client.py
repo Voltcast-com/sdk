@@ -146,6 +146,40 @@ class Client:
         })
         return Series(body["data"], body.get("meta", {}))
 
+    def renewables(
+        self,
+        zone: str,
+        start: Optional[str] = None,
+        end: Optional[str] = None,
+    ) -> Series:
+        """Day-ahead wind/solar forecasts: TSO (A69) and Voltcast's own
+        volt-res-1 model with q10-q90 bands, beside realized generation.
+        meta['verification'] scores both against actuals head-to-head
+        (Pro/Scale/Balancing/Quant)."""
+        params: dict[str, Any] = {}
+        if start:
+            params["from"] = start
+        if end:
+            params["to"] = end
+        body = self._request("GET", f"/v1/renewables/{zone}", params=params)
+        return Series(body["data"], body.get("meta", {}))
+
+    def weather(
+        self,
+        zone: str,
+        start: Optional[str] = None,
+        end: Optional[str] = None,
+    ) -> Series:
+        """Zone-centroid weather: previous-run point forecast + wind-ensemble
+        band, up to 7 days out (Pro/Scale/Balancing/Quant)."""
+        params: dict[str, Any] = {}
+        if start:
+            params["from"] = start
+        if end:
+            params["to"] = end
+        body = self._request("GET", f"/v1/weather/{zone}", params=params)
+        return Series(body["data"], body.get("meta", {}))
+
     def accuracy(self) -> dict[str, Any]:
         """The public forecast scorecard."""
         return self._request("GET", "/v1/accuracy")
