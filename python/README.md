@@ -18,6 +18,8 @@ print(len(prices), prices[0])
 df = vc.prices("DE-LU", start="2026-07-01", end="2026-07-10").to_pandas()
 
 forecast = vc.forecast("DE-LU", horizon="48h")
+res = vc.renewables("DE-LU")            # TSO vs volt-res-1 wind/solar, head-to-head
+wx = vc.weather("DE-LU")                # centroid point forecast + ensemble band
 print(forecast.meta["model_version"], forecast[0])
 
 # Pro plans: optimization + bulk export

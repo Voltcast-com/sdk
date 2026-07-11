@@ -20,6 +20,8 @@ import voltcast
 vc = voltcast.Client("YOUR_API_KEY")
 prices = vc.prices("DE-LU")                  # yesterday → tomorrow, 15-min native
 forecast = vc.forecast("DE-LU", horizon="48h")
+res = vc.renewables("DE-LU")            # TSO vs volt-res-1 wind/solar, head-to-head
+wx = vc.weather("DE-LU")                # centroid point forecast + ensemble band
 ```
 
 ```ts
