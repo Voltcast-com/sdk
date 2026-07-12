@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aiovoltcast"
+version = "0.1.0"
+description = "Async Python client for the Voltcast API (European electricity prices & forecasts) — built for Home Assistant core."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [{ name = "Voltcast", email = "hello@voltcast.com" }]
+keywords = ["electricity", "prices", "entsoe", "energy", "home-assistant", "asyncio"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Home Automation",
+]
+dependencies = ["aiohttp>=3.9"]
+
+[project.urls]
+Homepage = "https://voltcast.com"
+Documentation = "https://voltcast.com/docs"
+Repository = "https://github.com/Voltcast-com/sdk"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aiovoltcast"]
