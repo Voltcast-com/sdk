@@ -10,8 +10,10 @@ markets (Volt Temp), renewables, imbalance, optimization endpoints and bulk expo
 | [Python](./python) | `voltcast` | `pip install voltcast` |
 | [TypeScript](./typescript) | `@voltcast/sdk` | `npm install @voltcast/sdk` |
 
-Get a free API key at [voltcast.com/dashboard](https://voltcast.com/dashboard) —
-the free tier includes DE-LU prices and a 48h P50 forecast, no card required.
+New accounts start with [Home](https://voltcast.com/register?plan=home&utm_source=github&utm_medium=sdk-repository&utm_campaign=home-sdk)
+at €9/month after a 7-day card-required trial. Home includes one selected
+European bidding zone, native-resolution prices, a 7-day P50 forecast, 90 days
+of history, and one webhook rule. Existing Free accounts remain grandfathered.
 
 ## Quick taste
 
@@ -36,6 +38,12 @@ const hdd = await vc.degreeDays("london");    // CME-city degree-day tracker
 
 Full endpoint reference, webhook signature verification and error codes:
 [voltcast.com/docs](https://voltcast.com/docs).
+
+Task-first examples:
+[Home Assistant](https://voltcast.com/integrations/home-assistant?utm_source=github&utm_medium=sdk-repository&utm_campaign=home-assistant) ·
+[evcc](https://voltcast.com/integrations/evcc?utm_source=github&utm_medium=sdk-repository&utm_campaign=evcc) ·
+[n8n](https://voltcast.com/integrations/n8n?utm_source=github&utm_medium=sdk-repository&utm_campaign=n8n) ·
+[AI assistants](https://voltcast.com/ai/local-electricity-price?utm_source=github&utm_medium=sdk-repository&utm_campaign=ai-assistant)
 
 ## Forecast accuracy, in the open
 

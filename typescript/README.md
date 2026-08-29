@@ -24,7 +24,11 @@ Works in Node 18+, Bun, Deno and the browser (ESM + CJS). Zero dependencies. Ful
 - **Optimization** — cheapest charging window, load schedules, battery arbitrage simulation
 - **Webhooks & SSE** — auction results pushed seconds after publication (13:00 CET SDAC + IDA sessions)
 
-Get a **free API key** at [voltcast.com/register](https://voltcast.com/register) — no card required.
+New accounts start with
+**[Home](https://voltcast.com/register?plan=home&utm_source=github&utm_medium=typescript-sdk&utm_campaign=home-sdk)**
+at €9/month after a 7-day card-required trial. Home includes one selected
+European zone, native-resolution prices, the 7-day P50 forecast, 90 days of
+history, and one webhook rule. Existing Free accounts remain grandfathered.
 
 ## Quickstart
 
@@ -92,8 +96,9 @@ No other European power-data vendor makes that commitment.
 
 ## Plans
 
-Free (1 zone) · Home €9/mo · Starter €49/mo · Volt Temp €99/mo · Pro €199/mo ·
-Balancing €299/mo · Scale €499/mo · Quant €999/mo — all self-serve, annual −15%.
+Home €9/mo · Starter €49/mo · Pro €199/mo · Scale €499/mo, with annual billing
+available where shown. Volt Temp, Desk, Balancing, and Quant remain defined for
+existing users and pilots but are not currently open for new self-serve signup.
 Details: [voltcast.com/#pricing](https://voltcast.com/#pricing).
 
 ## License

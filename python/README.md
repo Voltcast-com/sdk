@@ -7,6 +7,12 @@ European day-ahead power prices, P10/P50/P90 forecasts, optimization and bulk ex
 pip install voltcast            # or: pip install voltcast[pandas]
 ```
 
+New accounts start with
+[Home](https://voltcast.com/register?plan=home&utm_source=github&utm_medium=python-sdk&utm_campaign=home-sdk):
+one selected European zone, native-resolution prices, the 7-day P50 forecast,
+90 days of history, and one webhook rule for €9/month after a 7-day
+card-required trial.
+
 ```python
 import voltcast
 
