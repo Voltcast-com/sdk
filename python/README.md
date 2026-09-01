@@ -28,9 +28,21 @@ res = vc.renewables("DE-LU")            # TSO vs volt-res-1 wind/solar, head-to-
 wx = vc.weather("DE-LU")                # centroid point forecast + ensemble band
 print(forecast.meta["model_version"], forecast[0])
 
-# Pro plans: optimization + bulk export
-windows = vc.cheapest_window("DE-LU", duration_minutes=120)
-plan = vc.schedule("DE-LU", energy_kwh=40, max_power_kw=11, deadline="2026-07-11T07:00:00Z")
+# Home+: bill-adjusted cost/carbon windows and schedules
+tariff = {
+    "grid_fee_eur_kwh": 0.10,
+    "supplier_markup_eur_kwh": 0.02,
+    "vat_percent": 25,
+}
+windows = vc.cheapest_window(
+    "DE-LU", duration_minutes=120, objective="balanced", tariff=tariff
+)
+plan = vc.schedule(
+    "DE-LU", energy_kwh=40, max_power_kw=11,
+    deadline="2026-07-11T07:00:00Z", tariff=tariff,
+)
+
+# Pro+: bulk export
 files = vc.export_urls("DE-LU", "2018-01-01", "2026-12-31", format="parquet")
 ```
 

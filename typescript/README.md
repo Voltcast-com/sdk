@@ -21,14 +21,16 @@ Works in Node 18+, Bun, Deno and the browser (ESM + CJS). Zero dependencies. Ful
 - **Renewables** — our wind/solar model scored head-to-head against the TSO's forecast in every response
 - **Balancing** — imbalance prices (7 markets, revision-aware), FCR/aFRR/mFRR reserve prices, outages
 - **Grid** — load, generation mix, carbon intensity, cross-border physical flows
-- **Optimization** — cheapest charging window, load schedules, battery arbitrage simulation
+- **Home optimization** — bill-adjusted cost/carbon windows, load schedules, battery simulation
 - **Webhooks & SSE** — auction results pushed seconds after publication (13:00 CET SDAC + IDA sessions)
 
 New accounts start with
 **[Home](https://voltcast.com/register?plan=home&utm_source=github&utm_medium=typescript-sdk&utm_campaign=home-sdk)**
 at €9/month after a 7-day card-required trial. Home includes one selected
 European zone, native-resolution prices, the 7-day P50 forecast, 90 days of
-history, and one webhook rule. Existing Free accounts remain grandfathered.
+history, 14-day negative-price risk, bill-adjusted cost/carbon windows,
+unlimited webhooks and SSE. Existing Free accounts remain grandfathered on
+their original limits.
 
 ## Quickstart
 
@@ -43,8 +45,17 @@ const { data } = await vc.prices("DE-LU");
 // P10/P50/P90 forecast, 7 days out
 const forecast = await vc.forecast("DE-LU", { horizon: "7d" });
 
-// Cheapest 3-hour window in the next 24h (EV charging, batteries)
-const window = await vc.cheapestWindow({ zone: "DE-LU", duration_minutes: 180 });
+// Bill-adjusted 3-hour window balancing cost with the trailing carbon profile
+const window = await vc.cheapestWindow({
+  zone: "DE-LU",
+  duration_minutes: 180,
+  objective: "balanced",
+  tariff: {
+    grid_fee_eur_kwh: 0.10,
+    supplier_markup_eur_kwh: 0.02,
+    vat_percent: 25,
+  },
+});
 
 // Our wind/solar model vs the TSO's — verification included in the response
 const res = await vc.renewables("DE-LU");

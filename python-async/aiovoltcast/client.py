@@ -79,15 +79,60 @@ class VoltcastClient:
         """Carbon intensity + green score from the live generation mix."""
         return await self._request(f"/v1/carbon/{zone}")
 
+    async def negative_risk(
+        self,
+        zone: str,
+        *,
+        days: int = 2,
+    ) -> dict[str, Any]:
+        """Negative-price probability curve and daily aggregates."""
+        return await self._request(
+            f"/v1/risk/negative/{zone}",
+            params={"days": str(days)},
+        )
+
+    async def cheapest_window(
+        self,
+        zone: str,
+        *,
+        duration_minutes: int = 120,
+        objective: str = "cost",
+        tariff: dict[str, float] | None = None,
+        count: int = 1,
+    ) -> dict[str, Any]:
+        """Rank Home+ action windows by cost, carbon profile, or both."""
+        payload: dict[str, Any] = {
+            "zone": zone,
+            "duration_minutes": duration_minutes,
+            "objective": objective,
+            "count": count,
+        }
+        if tariff:
+            payload["tariff"] = tariff
+        return await self._request(
+            "/v1/optimize/cheapest-window",
+            method="POST",
+            json=payload,
+        )
+
     async def validate_key(self, zone: str) -> None:
         """Raise VoltcastAuthError/VoltcastError if the key/zone don't work."""
         await self.prices(zone)
 
-    async def _request(self, path: str, params: dict[str, str] | None = None) -> dict[str, Any]:
+    async def _request(
+        self,
+        path: str,
+        params: dict[str, str] | None = None,
+        *,
+        method: str = "GET",
+        json: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         try:
-            async with self._session.get(
+            async with self._session.request(
+                method,
                 f"{self._base_url}{path}",
                 params=params,
+                json=json,
                 headers=self._headers,
                 timeout=DEFAULT_TIMEOUT,
             ) as response:

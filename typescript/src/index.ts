@@ -40,7 +40,18 @@ export interface CheapestWindow {
     start: string;
     end: string;
     avg_price_eur_mwh: number;
+    avg_all_in_eur_kwh: number;
+    estimated_carbon_gco2eq_kwh: number | null;
+    objective: "cost" | "carbon" | "balanced";
+    objective_score: number;
     basis: "published" | "forecast";
+    derived_from_coarser_period: boolean;
+}
+
+export interface HouseholdTariff {
+    grid_fee_eur_kwh?: number;
+    supplier_markup_eur_kwh?: number;
+    vat_percent?: number;
 }
 
 export interface ScheduleSlot {
@@ -49,7 +60,9 @@ export interface ScheduleSlot {
     power_kw: number;
     energy_kwh: number;
     price_eur_mwh: number;
+    all_in_price_eur_kwh: number;
     basis: "published" | "forecast";
+    derived_from_coarser_period: boolean;
 }
 
 export interface Schedule {
@@ -57,6 +70,8 @@ export interface Schedule {
     energy_kwh: number;
     expected_cost_eur: number;
     baseline_cost_eur: number;
+    wholesale_expected_cost_eur: number;
+    wholesale_baseline_cost_eur: number;
     savings_eur: number;
     savings_pct: number | null;
 }
@@ -197,24 +212,27 @@ export class Voltcast {
         return this.request("GET", `/v1/forecasts/${zone}`, { query: options });
     }
 
-    /** Cheapest contiguous windows over the forward curve (Pro+). */
+    /** Rank contiguous Home+ windows by household cost, carbon profile, or both. */
     cheapestWindow(body: {
         zone: string;
         duration_minutes: number;
         from?: string;
         to?: string;
         count?: number;
+        objective?: "cost" | "carbon" | "balanced";
+        tariff?: HouseholdTariff;
     }): Promise<ApiResponse<CheapestWindow[]>> {
         return this.request("POST", "/v1/optimize/cheapest-window", { body });
     }
 
-    /** Cost-optimal charge/dispatch schedule (Pro+). */
+    /** Household cost-optimal charge/dispatch schedule (Home+). */
     schedule(body: {
         zone: string;
         energy_kwh: number;
         max_power_kw: number;
         deadline: string;
         start?: string;
+        tariff?: HouseholdTariff;
     }): Promise<ApiResponse<Schedule>> {
         return this.request("POST", "/v1/optimize/schedule", { body });
     }

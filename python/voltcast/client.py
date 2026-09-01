@@ -105,13 +105,18 @@ class Client:
         start: Optional[str] = None,
         end: Optional[str] = None,
         count: int = 3,
+        objective: str = "cost",
+        tariff: Optional[dict[str, float]] = None,
     ) -> Series:
-        """Cheapest contiguous windows over the forward curve (Pro+)."""
+        """Rank contiguous Home+ windows by cost, carbon, or both."""
         payload: dict[str, Any] = {
             "zone": zone,
             "duration_minutes": duration_minutes,
             "count": count,
+            "objective": objective,
         }
+        if tariff:
+            payload["tariff"] = tariff
         if start:
             payload["from"] = start
         if end:
@@ -126,14 +131,17 @@ class Client:
         max_power_kw: float,
         deadline: str,
         start: Optional[str] = None,
+        tariff: Optional[dict[str, float]] = None,
     ) -> dict[str, Any]:
-        """Cost-optimal charge/dispatch schedule before a deadline (Pro+)."""
+        """Household cost-optimal Home+ schedule before a deadline."""
         payload: dict[str, Any] = {
             "zone": zone,
             "energy_kwh": energy_kwh,
             "max_power_kw": max_power_kw,
             "deadline": deadline,
         }
+        if tariff:
+            payload["tariff"] = tariff
         if start:
             payload["start"] = start
         body = self._request("POST", "/v1/optimize/schedule", json=payload)

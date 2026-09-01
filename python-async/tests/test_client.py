@@ -10,7 +10,7 @@ from aiovoltcast import VoltcastAuthError, VoltcastClient, VoltcastError
 async def make_client(handler_map) -> tuple[TestClient, VoltcastClient]:
     app = web.Application()
     for path, handler in handler_map.items():
-        app.router.add_get(path, handler)
+        app.router.add_route("*", path, handler)
     client = TestClient(TestServer(app))
     await client.start_server()
     vc = VoltcastClient("test-key", session=client.session, base_url=str(client.make_url("")))
@@ -60,5 +60,49 @@ async def test_api_error_carries_status_and_code():
             await vc.prices("XX")
         assert excinfo.value.status == 404
         assert excinfo.value.code == "zone_not_found"
+    finally:
+        await client.close()
+
+
+@pytest.mark.asyncio
+async def test_cheapest_window_posts_household_action_settings():
+    async def optimize(request):
+        body = await request.json()
+        assert body == {
+            "zone": "DE-LU",
+            "duration_minutes": 180,
+            "objective": "balanced",
+            "count": 1,
+            "tariff": {
+                "grid_fee_eur_kwh": 0.10,
+                "supplier_markup_eur_kwh": 0.02,
+                "vat_percent": 25,
+            },
+        }
+        return web.json_response(
+            {
+                "data": [
+                    {
+                        "start": "2026-09-01T12:00:00Z",
+                        "end": "2026-09-01T15:00:00Z",
+                    }
+                ],
+                "meta": {"objective": "balanced"},
+            }
+        )
+
+    client, vc = await make_client({"/v1/optimize/cheapest-window": optimize})
+    try:
+        body = await vc.cheapest_window(
+            "DE-LU",
+            duration_minutes=180,
+            objective="balanced",
+            tariff={
+                "grid_fee_eur_kwh": 0.10,
+                "supplier_markup_eur_kwh": 0.02,
+                "vat_percent": 25,
+            },
+        )
+        assert body["meta"]["objective"] == "balanced"
     finally:
         await client.close()

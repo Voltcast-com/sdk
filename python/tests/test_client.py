@@ -31,3 +31,37 @@ def test_prices_with_real_key():
     assert len(prices) > 0
     row = prices[0]
     assert {"delivery_start", "delivery_end", "price_eur_mwh", "resolution_flag"} <= set(row)
+
+
+def test_cheapest_window_sends_household_action_settings(httpx_mock):
+    httpx_mock.add_response(
+        method="POST",
+        url="https://example.test/api/v1/optimize/cheapest-window",
+        json={
+            "data": [{"start": "2026-09-01T12:00:00Z"}],
+            "meta": {"objective": "balanced"},
+        },
+    )
+    vc = voltcast.Client("test-key", base_url="https://example.test/api")
+
+    windows = vc.cheapest_window(
+        "DE-LU",
+        duration_minutes=180,
+        objective="balanced",
+        tariff={
+            "grid_fee_eur_kwh": 0.10,
+            "supplier_markup_eur_kwh": 0.02,
+            "vat_percent": 25,
+        },
+        count=1,
+    )
+
+    request = httpx_mock.get_request()
+    assert request is not None
+    assert request.read()
+    assert request.method == "POST"
+    assert request.headers["Authorization"] == "Bearer test-key"
+    assert request.content
+    assert windows.meta["objective"] == "balanced"
+    assert b'"objective":"balanced"' in request.content
+    assert b'"supplier_markup_eur_kwh":0.02' in request.content

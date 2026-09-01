@@ -13,9 +13,22 @@ async with aiohttp.ClientSession() as session:
     prices = await client.prices("DE-LU")
     forecast = await client.forecast("DE-LU", horizon="48h")
     carbon = await client.carbon("DE-LU")
+    risk = await client.negative_risk("DE-LU", days=2)
+    action = await client.cheapest_window(
+        "DE-LU",
+        duration_minutes=120,
+        objective="balanced",
+        tariff={
+            "grid_fee_eur_kwh": 0.10,
+            "supplier_markup_eur_kwh": 0.02,
+            "vat_percent": 25,
+        },
+    )
 ```
 
-Free API key (no card): https://voltcast.com/register
+New keyed access starts with Home at €9/month after a 7-day card-required
+trial: https://voltcast.com/register?plan=home. Existing Free keys retain their
+original grandfathered limits.
 
 ## Errors
 
