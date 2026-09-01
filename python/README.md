@@ -28,7 +28,8 @@ res = vc.renewables("DE-LU")            # TSO vs volt-res-1 wind/solar, head-to-
 wx = vc.weather("DE-LU")                # centroid point forecast + ensemble band
 print(forecast.meta["model_version"], forecast[0])
 
-# Home+: bill-adjusted cost/carbon windows and schedules
+# Home+: bill-context cost windows and schedules
+# carbon/balanced are experimental historical-profile heuristics, not forecasts
 tariff = {
     "grid_fee_eur_kwh": 0.10,
     "supplier_markup_eur_kwh": 0.02,

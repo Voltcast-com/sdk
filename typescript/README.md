@@ -21,14 +21,14 @@ Works in Node 18+, Bun, Deno and the browser (ESM + CJS). Zero dependencies. Ful
 - **Renewables** — our wind/solar model scored head-to-head against the TSO's forecast in every response
 - **Balancing** — imbalance prices (7 markets, revision-aware), FCR/aFRR/mFRR reserve prices, outages
 - **Grid** — load, generation mix, carbon intensity, cross-border physical flows
-- **Home optimization** — bill-adjusted cost/carbon windows, load schedules, battery simulation
+- **Home optimization** — bill-context cost windows, load schedules, battery simulation
 - **Webhooks & SSE** — auction results pushed seconds after publication (13:00 CET SDAC + IDA sessions)
 
 New accounts start with
 **[Home](https://voltcast.com/register?plan=home&utm_source=github&utm_medium=typescript-sdk&utm_campaign=home-sdk)**
 at €9/month after a 7-day card-required trial. Home includes one selected
 European zone, native-resolution prices, the 7-day P50 forecast, 90 days of
-history, 14-day negative-price risk, bill-adjusted cost/carbon windows,
+history, 14-day negative-price risk, bill-context charging windows,
 unlimited webhooks and SSE. Existing Free accounts remain grandfathered on
 their original limits.
 
@@ -45,7 +45,8 @@ const { data } = await vc.prices("DE-LU");
 // P10/P50/P90 forecast, 7 days out
 const forecast = await vc.forecast("DE-LU", { horizon: "7d" });
 
-// Bill-adjusted 3-hour window balancing cost with the trailing carbon profile
+// Experimental balanced mode: cost + trailing historical production profile.
+// It is not a forward carbon forecast or an emissions-reduction claim.
 const window = await vc.cheapestWindow({
   zone: "DE-LU",
   duration_minutes: 180,

@@ -100,7 +100,7 @@ class VoltcastClient:
         tariff: dict[str, float] | None = None,
         count: int = 1,
     ) -> dict[str, Any]:
-        """Rank Home+ action windows by cost, carbon profile, or both."""
+        """Rank by cost or an experimental historical carbon-profile heuristic."""
         payload: dict[str, Any] = {
             "zone": zone,
             "duration_minutes": duration_minutes,

@@ -108,7 +108,7 @@ class Client:
         objective: str = "cost",
         tariff: Optional[dict[str, float]] = None,
     ) -> Series:
-        """Rank contiguous Home+ windows by cost, carbon, or both."""
+        """Rank Home+ windows by cost or an experimental historical carbon profile."""
         payload: dict[str, Any] = {
             "zone": zone,
             "duration_minutes": duration_minutes,

@@ -26,6 +26,10 @@ async with aiohttp.ClientSession() as session:
     )
 ```
 
+`cost` is the production default. `carbon` and `balanced` are experimental
+trailing historical production-profile heuristics—not forward carbon forecasts
+or evidence of emissions savings.
+
 New keyed access starts with Home at €9/month after a 7-day card-required
 trial: https://voltcast.com/register?plan=home. Existing Free keys retain their
 original grandfathered limits.

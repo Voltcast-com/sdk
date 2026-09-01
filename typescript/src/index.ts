@@ -212,7 +212,7 @@ export class Voltcast {
         return this.request("GET", `/v1/forecasts/${zone}`, { query: options });
     }
 
-    /** Rank contiguous Home+ windows by household cost, carbon profile, or both. */
+    /** Cost ranking; carbon/balanced are experimental historical-profile heuristics. */
     cheapestWindow(body: {
         zone: string;
         duration_minutes: number;
